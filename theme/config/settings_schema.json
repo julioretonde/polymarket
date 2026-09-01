@@ -1,0 +1,35 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Balmoral Running",
+    "theme_version": "1.0.0",
+    "theme_author": "Recreated from the balmoralrunning.com storefront",
+    "theme_documentation_url": "https://www.balmoralrunning.com/",
+    "theme_support_url": "https://www.balmoralrunning.com/pages/contact-us"
+  },
+  {
+    "name": "Branding",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" },
+      {
+        "type": "image_picker",
+        "id": "social_sharing_image",
+        "label": "Social sharing image",
+        "info": "Used for og:image and the Twitter card."
+      },
+      { "type": "text", "id": "theme_color", "label": "Browser theme colour" }
+    ]
+  },
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "header_inverted_on_index",
+        "label": "Invert the header on the home page",
+        "info": "Adds --site-header-inverted to <body> so the header reads white over the hero until the page is scrolled.",
+        "default": true
+      }
+    ]
+  }
+]

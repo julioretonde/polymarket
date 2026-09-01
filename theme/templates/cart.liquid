@@ -1,0 +1,37 @@
+{%- comment -%}
+  Minimal stand-in cart page; the drawer in the layout is the primary cart UI.
+{%- endcomment -%}
+<div class="container-fluid pt-35 pb-20 d-flex flex-column row-gap-20 fz-14 fz-xl-15">
+  <h1 class="fz-16 fz-xl-18 fw-400 lh-normal m-0">{{ 'general.cart.title' | t }}</h1>
+
+  {%- if cart.item_count == 0 -%}
+    <p class="m-0">{{ 'cart.empty.title' | t }}</p>
+    <a class="btn --link align-self-start" href="{{ routes.all_products_collection_url }}">
+      <span class="btn__label" aria-hidden="true">{{ 'cart.empty.cta' | t }}</span>
+    </a>
+  {%- else -%}
+    <form action="{{ routes.cart_url }}" method="post" novalidate class="d-flex flex-column row-gap-15">
+      {%- for item in cart.items -%}
+        <div class="d-flex justify-content-between grid-gap-10">
+          <a class="td-none" href="{{ item.url }}">{{ item.product.title }} &mdash; {{ item.variant.title }}</a>
+          <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" aria-label="Quantity">
+          <span>{{ item.final_line_price | money_with_currency }}</span>
+        </div>
+      {%- endfor -%}
+
+      <p class="d-flex justify-content-between m-0">
+        <span>{{ 'cart.subtotal' | t }}</span>
+        <span>{{ cart.total_price | money_with_currency }}</span>
+      </p>
+
+      <div class="d-flex grid-gap-10">
+        <button class="btn --link" type="submit" name="update">
+          <span class="btn__label" aria-hidden="true">Update</span>
+        </button>
+        <button class="btn --link" type="submit" name="checkout">
+          <span class="btn__label" aria-hidden="true">{{ 'cart.checkout' | t }}</span>
+        </button>
+      </div>
+    </form>
+  {%- endif -%}
+</div>

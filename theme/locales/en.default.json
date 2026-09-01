@@ -1,0 +1,47 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "navigation": {
+      "menu": "Menu"
+    },
+    "search": {
+      "title": "Search",
+      "placeholder": "Search"
+    },
+    "cart": {
+      "title": "Cart"
+    },
+    "footer": {
+      "copyright": "Copyright"
+    }
+  },
+  "localization": {
+    "language_label": "Select language",
+    "country_label": "Select country"
+  },
+  "newsletter": {
+    "success": "Thanks for subscribing."
+  },
+  "customer": {
+    "log_in": "Login",
+    "account": {
+      "title": "Account"
+    }
+  },
+  "cart": {
+    "empty": {
+      "title": "Your cart is empty",
+      "text": "Start exploring to find your next favorite piece.",
+      "cta": "Shop All"
+    },
+    "quantity": "Quantity",
+    "subtotal": "Subtotal",
+    "checkout": "Checkout"
+  },
+  "product": {
+    "sold_out": "Sold out"
+  }
+}

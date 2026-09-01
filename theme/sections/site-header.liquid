@@ -1,0 +1,170 @@
+{%- comment -%}
+  Site header.
+
+  Fixed, pointer-events-none shell holding three layers:
+    1. `site-header__bg`        - the white plate that fades in on scroll
+    2. `site-header__searchbar` - the search panel, hidden until toggled
+    3. `site-header__wrap`      - the left menu / logo / right menu row
+
+  Everything below the wrap is inert until the matching control is expanded, so
+  the header stays click-through over the hero.
+{%- endcomment -%}
+
+<header
+  class="site-header position-fixed z-9000 t-0 l-0 w-100 pointer-events-none overflow-clip"
+  id="site-header"
+  data-ui="site-header">
+  <div
+    class="site-header__bg position-absolute t-0 l-0 w-100 bg-color-white pointer-events-none"
+    aria-hidden="true"
+    inert></div>
+
+  <div
+    class="site-header__searchbar position-absolute t-0 l-0 w-100 container-fluid d-grid pointer-events-all"
+    id="site-header__searchbar"
+    aria-hidden="true"
+    inert>
+    <form
+      class="search-form col-start-1 col-span-4 col-span-md-8 col-span-xl-6 col-start-xl-4 d-flex flex-column row-gap-15"
+      action="{{ routes.search_url }}"
+      method="get"
+      role="search">
+      <input type="hidden" name="options[prefix]" value="last">
+      <input
+        class="search-form__input w-100 fz-20 fz-md-32 fz-xl-40 fw-400 lh-normal color-current p-0 m-0"
+        type="search"
+        name="q"
+        value="{{ search.terms | escape }}"
+        placeholder="{{ 'general.search.placeholder' | t }}"
+        autocomplete="off"
+        aria-label="{{ 'general.search.placeholder' | t }}">
+
+      <div class="search-form__types d-flex align-items-center grid-gap-20 fz-13 fz-xl-14">
+        {%- assign search_types = section.settings.search_types | split: ',' -%}
+        {%- for type in search_types -%}
+          <label class="search-form__type position-relative d-block">
+            <input type="radio" name="type" value="{{ type | strip }}" class="d-none"{% if forloop.first %} checked{% endif %}>
+            {{ type | strip | capitalize }}
+          </label>
+        {%- endfor -%}
+      </div>
+    </form>
+  </div>
+
+  <div class="site-header__wrap position-relative container-fluid d-grid w-100">
+    <nav class="site-header__leftNav col-start-1 row-start-1 align-self-center justify-self-start d-flex align-items-center fz-14 fw-500 lh-normal pointer-events-all">
+      <button
+        class="site-header__burger position-relative d-xl-none color-current p-0 m-0"
+        type="button"
+        aria-label="{{ 'general.navigation.menu' | t }}"
+        aria-controls="site-nav"
+        aria-expanded="false"></button>
+
+      <ul class="site-header__leftMenu d-none d-xl-flex align-items-center menu list-none m-0 p-0">
+        {%- for link in linklists[section.settings.left_menu].links -%}
+          <li class="menu-item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- if link.links.size > 0 -%}
+              <ul class="list-none m-0 p-0">
+                {%- for child in link.links -%}
+                  <li class="menu-item"><a href="{{ child.url }}">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+
+    <figure class="site-header__logo col-start-1 row-start-1 align-self-center justify-self-center pointer-events-all p-0 m-0" role="banner">
+      <a
+        class="site-header__logoLink d-block w-100 color-current td-none"
+        href="{{ routes.root_url }}"
+        rel="home"
+        title="{{ shop.name }}">
+        {%- render 'icon-logo' -%}
+      </a>
+    </figure>
+
+    <nav
+      class="site-header__rightNav col-start-1 row-start-1 align-self-center justify-self-end d-flex align-items-center grid-gap-20 fz-14 fw-500 lh-normal pointer-events-all"
+      role="navigation">
+      <ul class="site-header__rightMenu d-none d-xl-flex align-items-center order-0 menu list-none m-0 p-0">
+        {%- for link in linklists[section.settings.right_menu].links -%}
+          <li class="menu-item">
+            <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- if link.links.size > 0 -%}
+              <ul class="list-none m-0 p-0">
+                {%- for child in link.links -%}
+                  <li class="menu-item"><a href="{{ child.url }}">{{ child.title }}</a></li>
+                {%- endfor -%}
+              </ul>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      <button
+        class="site-header__cartBtn position-relative d-xl-flex order-0 order-xl-3 fw-inherit p-0 m-0"
+        type="button"
+        aria-label="{{ 'general.cart.title' | t }}"
+        aria-controls="site-cart"
+        aria-expanded="false"
+        data-cart-count="{{ cart.item_count }}">
+        <span aria-hidden="true">{{ 'general.cart.title' | t }}</span>
+        {%- render 'icon-cart' -%}
+      </button>
+
+      <button
+        class="site-header__searchBtn order-1 order-xl-1 fw-inherit p-0 m-0"
+        aria-label="{{ 'general.search.title' | t }}"
+        aria-controls="site-header__searchbar"
+        aria-expanded="false">
+        <span aria-hidden="true">{{ 'general.search.title' | t }}</span>
+        {%- render 'icon-search' -%}
+      </button>
+
+      <a class="site-header__accountLink d-none d-xl-block order-xl-2 td-none" href="{{ routes.account_url }}">
+        {%- if customer -%}
+          {{ 'customer.account.title' | t }}
+        {%- else -%}
+          {{ 'customer.log_in' | t }}
+        {%- endif -%}
+      </a>
+    </nav>
+  </div>
+</header>
+
+{%- comment -%}
+  Pushes the first row of the page below the fixed header. Height comes from
+  --site-header-spacer-height, which is redefined per breakpoint in theme.css.
+{%- endcomment -%}
+<div class="site-header__spacer w-100 visibility-hidden pointer-events-none" aria-hidden="true" inert></div>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "section-site-header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "left_menu",
+      "label": "Left menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "right_menu",
+      "label": "Right menu",
+      "default": "secondary-menu"
+    },
+    {
+      "type": "text",
+      "id": "search_types",
+      "label": "Search result types",
+      "info": "Comma separated list rendered as radio filters in the search panel.",
+      "default": "product,page"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,109 @@
+{%- comment -%}
+  Product card.
+
+  Accepts:
+    product     - the product to render (required)
+    unique_id   - id for the custom element; also the lazyload target and what
+                  makes the swatch buttons addressable per card (required)
+    class       - extra classes on the <product-preview> host
+    rollover    - true to add `--variation-rollover-specs`, the treatment that
+                  hides title/price until the card is hovered or focused
+    show_colors - true to render the colour swatch row
+
+  The swatch buttons carry the replacement image, price and URL as data
+  attributes; theme.js swaps them into the card on hover.
+{%- endcomment -%}
+
+{%- liquid
+  assign card_class = 'product-preview d-grid'
+  if class != blank
+    assign card_class = card_class | append: ' ' | append: class
+  endif
+  assign card_class = card_class | append: ' align-self-start'
+  if rollover
+    assign card_class = card_class | append: ' --variation-rollover-specs'
+  endif
+
+  assign image = product.featured_image
+  assign widths = '576,768,1024,1200,1800' | split: ','
+
+  assign color_option = nil
+  assign color_index = 0
+  for option in product.options_with_values
+    assign option_name = option.name | downcase
+    if option_name == 'color' or option_name == 'colour' or option_name == 'couleur'
+      assign color_option = option
+      assign color_index = forloop.index0
+    endif
+  endfor
+-%}
+
+<product-preview class="{{ card_class }}" id="{{ unique_id }}">
+  <a class="product-preview__link col-start-1 row-start-1 row-span-2 d-grid td-none" href="{{ product.url }}">
+    <figure class="product-preview__thumbnail col-start-1 row-start-1 w-100 position-relative overflow-clip">
+      {%- if image -%}
+        <img
+          class="product-preview__img image-as-background"
+          src="{{ image | image_url: width: 1800 }}"
+          srcset="{% for w in widths %}{%- assign wn = w | plus: 0 -%}{{ image | image_url: width: wn }} {{ wn }}w{% unless forloop.last %},{% endunless %}{% endfor %}"
+          sizes="(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw"
+          alt="{{ image.alt | default: product.title | escape }}"
+          width="{{ image.width }}"
+          height="{{ image.height }}"
+          data-lazyload-target="#{{ unique_id }}"
+          loading="lazy">
+      {%- endif -%}
+    </figure>
+
+    <div class="product-preview__content col-start-1 row-start-2 position-relative d-flex flex-column">
+      <h3 class="product-preview__title fz-13 fz-xl-14 fw-400 lh-normal m-0">{{ product.title }}</h3>
+      <div class="product-preview__meta d-flex">
+        <p class="product-preview__price d-flex fz-13 fz-xl-14 fw-400 lh-normal m-0">
+          <span>{{ product.price | money_with_currency }}</span>
+        </p>
+        {%- unless product.available -%}
+          {%- comment -%}
+            Presence of this span is what dims the price - see the
+            `:has(.product-preview__soldout)` rule in theme.css.
+          {%- endcomment -%}
+          <span class="product-preview__soldout fz-13 fz-xl-14 fw-400 m-0">{{ 'product.sold_out' | t }}</span>
+        {%- endunless -%}
+      </div>
+    </div>
+  </a>
+
+  {%- if show_colors and color_option != nil and color_option.values.size > 1 -%}
+    <ul class="product-preview__colors col-start-1 row-start-1 align-self-end justify-self-start position-relative d-flex align-items-start list-none m-0 p-0">
+      {%- for value in color_option.values -%}
+        {%- capture value_name %}{{ value }}{% endcapture -%}
+
+        {%- liquid
+          assign swatch_variant = nil
+          for variant in product.variants
+            if variant.options[color_index] == value_name
+              assign swatch_variant = variant
+              break
+            endif
+          endfor
+
+          assign swatch_color = value.swatch.color | default: value_name | downcase
+          assign swatch_image = swatch_variant.image | default: product.featured_image
+        -%}
+
+        <li>
+          <button
+            class="product-preview__color d-block w-100 m-0 p-0"
+            aria-label="{{ value_name | escape }}"
+            style="color:{{ swatch_color }}"
+            data-price="{{ swatch_variant.price | default: product.price | money_with_currency }}"
+            data-url="{% if swatch_variant %}{{ product.url }}?variant={{ swatch_variant.id }}{% else %}{{ product.url }}{% endif %}"
+            {%- if swatch_image %}
+              data-img-src="{{ swatch_image | image_url: width: 1800 }}"
+              data-img-srcset="{% for w in widths %}{%- assign wn = w | plus: 0 -%}{{ swatch_image | image_url: width: wn }} {{ wn }}w{% unless forloop.last %},{% endunless %}{% endfor %}"
+            {%- endif -%}
+          ></button>
+        </li>
+      {%- endfor -%}
+    </ul>
+  {%- endif -%}
+</product-preview>

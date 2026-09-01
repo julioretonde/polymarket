@@ -1,0 +1,28 @@
+{%- comment -%}
+  Minimal stand-in collection grid, reusing the product card from the home page.
+{%- endcomment -%}
+<div class="container-fluid pt-35 pb-20 d-flex flex-column grid-gap-5">
+  <header class="d-flex justify-content-between grid-gap-10">
+    <h1 class="fz-16 fz-xl-18 fw-400 lh-normal m-0">{{ collection.title }}</h1>
+  </header>
+
+  {%- paginate collection.products by 24 -%}
+  <ul class="pb-row-featured-products__list d-grid grid-column-2 grid-column-md-4 col-gap-10 row-gap-20 list-none m-0 p-0">
+    {%- for product in collection.products -%}
+      <li>
+        {%- capture card_id -%}collection-{{ collection.id }}__product-{{ product.id }}{%- endcapture -%}
+        {%- render 'product-preview',
+          product: product,
+          unique_id: card_id,
+          class: 'pb-row-featured-products__product',
+          rollover: true,
+          show_colors: true -%}
+      </li>
+    {%- endfor -%}
+  </ul>
+
+  {%- if paginate.pages > 1 -%}
+    {{ paginate | default_pagination }}
+  {%- endif -%}
+  {%- endpaginate -%}
+</div>

@@ -1,0 +1,38 @@
+{%- comment -%}
+  Minimal stand-in product page. Not part of the captured home page - included
+  so the product cards link somewhere real.
+{%- endcomment -%}
+<div class="container-fluid pt-35 pb-20 d-grid grid-column-md-8 grid-column-xl-12 col-gap-10 row-gap-30">
+  <figure class="col-span-md-4 col-span-xl-6 w-100 position-relative overflow-clip m-0">
+    {%- if product.featured_image -%}
+      <img
+        class="w-100"
+        src="{{ product.featured_image | image_url: width: 1800 }}"
+        alt="{{ product.featured_image.alt | default: product.title | escape }}"
+        width="{{ product.featured_image.width }}"
+        height="{{ product.featured_image.height }}">
+    {%- endif -%}
+  </figure>
+
+  <div class="col-span-md-4 col-span-xl-4 col-start-xl-8 d-flex flex-column row-gap-15 fz-14 fz-xl-15">
+    <h1 class="fz-16 fz-xl-18 fw-400 lh-normal m-0">{{ product.title }}</h1>
+    <p class="m-0">{{ product.price | money_with_currency }}</p>
+
+    {%- form 'product', product -%}
+      <select class="w-100" name="id">
+        {%- for variant in product.variants -%}
+          <option value="{{ variant.id }}"{% unless variant.available %} disabled{% endunless %}>
+            {{- variant.title }} &mdash; {{ variant.price | money_with_currency -}}
+          </option>
+        {%- endfor -%}
+      </select>
+      <button class="btn --link mt-15 align-self-start" type="submit" name="add"{% unless product.available %} disabled{% endunless %}>
+        <span class="btn__label" aria-hidden="true">
+          {%- if product.available %}Add to cart{% else %}Sold out{% endif -%}
+        </span>
+      </button>
+    {%- endform -%}
+
+    <div class="wysiwyg">{{ product.description }}</div>
+  </div>
+</div>

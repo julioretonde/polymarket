@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.theme_color }}">
+
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>
+      {{- page_title -}}
+      {%- if current_tags %} &ndash; {{ 'general.meta.tags' | t: tags: current_tags | join: ', ' }}{% endif -%}
+      {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif -%}
+      {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+    </title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- render 'meta-tags' -%}
+    {%- render 'font-face' -%}
+
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+
+    {{ content_for_header }}
+  </head>
+
+  {%- liquid
+    assign body_classes = template.name
+    # The header sits on top of a full-bleed dark hero on the home page, so it
+    # renders in its inverted (white) state until the page is scrolled.
+    if settings.header_inverted_on_index and template.name == 'index'
+      assign body_classes = body_classes | append: ' --site-header-inverted'
+    endif
+  -%}
+  <body class="{{ body_classes }}">
+    <div
+      class="site-transition d-flex justify-content-center align-items-center position-fixed t-0 l-0 w-100 vh-100 min-vh-100 z-10000 overflow-hidden bg-gray-200 visibility-hidden pointer-events-none"
+      data-site-transition
+      aria-hidden="true">
+      <div class="site-transition__logo"></div>
+    </div>
+
+    {%- section 'site-header' -%}
+    {%- section 'site-nav' -%}
+    {%- render 'site-cart' -%}
+
+    <div data-windmill="wrapper">
+      <div data-windmill="container">
+        <main class="flex-grow-1" role="main">
+          {{ content_for_layout }}
+        </main>
+
+        {%- section 'site-footer' -%}
+      </div>
+    </div>
+
+    <dialog
+      class="site-localization-dialog p-20 p-md-40"
+      id="site-localization-dialog"
+      data-ui="site-localization-dialog"></dialog>
+
+    <script src="{{ 'theme.js' | asset_url }}" defer></script>
+  </body>
+</html>

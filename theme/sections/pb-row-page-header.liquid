@@ -1,0 +1,81 @@
+{%- comment -%}
+  Page-header row: a single full-bleed looping video, no copy over it.
+
+  The <video> keeps its source in `data-src` rather than `src` so nothing
+  downloads until the row is close to the viewport; theme.js promotes it and
+  plays it muted/inline.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign row_id = 'pb-row-page-header-' | append: section.id
+
+  assign video_source = nil
+  for source in s.video.sources
+    if source.format == 'mp4'
+      assign video_source = source
+      break
+    endif
+  endfor
+-%}
+
+{%- capture wrapper_class -%}
+  {%- render 'pb-row-wrapper-class',
+    pt: s.pt, pb: s.pb, pt_md: s.pt_md, pb_md: s.pb_md, pt_xl: s.pt_xl, pb_xl: s.pb_xl,
+    mt: s.mt, mb: s.mb, mt_md: s.mt_md, mb_md: s.mb_md, mt_xl: s.mt_xl, mb_xl: s.mb_xl,
+    text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+{%- capture wrapper_style -%}
+  {%- render 'pb-row-wrapper-style', zindex: s.zindex, text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+
+<div class="shopify-block block-wrapper" id="shopify-block-{{ section.id }}__wrapper">
+  <div class="{{ wrapper_class }}" style="{{ wrapper_style }}">
+    <div class="pb-row pb-row-page-header container-fluid position-relative d-grid row-gap-20 pb-30 pb-md-12 pb-xl-10" id="{{ row_id }}">
+      <div class="pb-row-page-header__media position-absolute t-0 l-0 w-100 h-100 pointer-events-none2" aria-hidden="true">
+        {%- if video_source -%}
+          <video
+            class="w-100 pb-row-page-header__video video-as-background"
+            data-module="video"
+            data-src="{{ video_source.url }}"
+            {% if s.video.preview_image %}poster="{{ s.video.preview_image | image_url: width: 1920 }}"{% endif %}
+            data-scroll
+            data-scroll-call="video"
+            data-scroll-repeat="true"
+            loop
+            muted
+            playsinline></video>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page header video",
+  "tag": "section",
+  "class": "section--pb-row-page-header",
+  "settings": [
+    { "type": "video", "id": "video", "label": "Background video" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "text_color", "label": "Text colour" },
+    { "type": "color", "id": "bg_color", "label": "Background colour" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "number", "id": "zindex", "label": "z-index", "default": 0 },
+    { "type": "number", "id": "pt", "label": "Padding top (mobile)", "default": 0 },
+    { "type": "number", "id": "pb", "label": "Padding bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "pt_md", "label": "Padding top (tablet)", "default": 0 },
+    { "type": "number", "id": "pb_md", "label": "Padding bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "pt_xl", "label": "Padding top (desktop)", "default": 0 },
+    { "type": "number", "id": "pb_xl", "label": "Padding bottom (desktop)", "default": 0 },
+    { "type": "number", "id": "mt", "label": "Margin top (mobile)", "default": 0 },
+    { "type": "number", "id": "mb", "label": "Margin bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "mt_md", "label": "Margin top (tablet)", "default": 0 },
+    { "type": "number", "id": "mb_md", "label": "Margin bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "mt_xl", "label": "Margin top (desktop)", "default": 0 },
+    { "type": "number", "id": "mb_xl", "label": "Margin bottom (desktop)", "default": 0 }
+  ],
+  "presets": [{ "name": "Page header video" }]
+}
+{% endschema %}

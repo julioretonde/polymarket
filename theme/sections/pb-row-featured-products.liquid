@@ -1,0 +1,96 @@
+{%- comment -%}
+  Featured products row: a titled header with a "Shop" link, then a 2-up
+  (mobile) / 4-up (tablet and desktop) grid of cards pulled from a collection.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign row_id = 'pb-row-featured-products-' | append: section.id
+  assign collection = collections[s.collection]
+-%}
+
+{%- capture wrapper_class -%}
+  {%- render 'pb-row-wrapper-class',
+    pt: s.pt, pb: s.pb, pt_md: s.pt_md, pb_md: s.pb_md, pt_xl: s.pt_xl, pb_xl: s.pb_xl,
+    mt: s.mt, mb: s.mb, mt_md: s.mt_md, mb_md: s.mb_md, mt_xl: s.mt_xl, mb_xl: s.mb_xl,
+    text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+{%- capture wrapper_style -%}
+  {%- render 'pb-row-wrapper-style', zindex: s.zindex, text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+
+<div class="shopify-block block-wrapper" id="shopify-block-{{ section.id }}__wrapper">
+  <div class="{{ wrapper_class }}" style="{{ wrapper_style }}">
+    <div class="pb-row pb-row-featured-products container-fluid d-flex flex-column grid-gap-5" id="{{ row_id }}">
+      <header class="pb-row-featured-products__header d-flex justify-content-between grid-gap-10">
+        <h2 class="pb-row-featured-products__title fz-16 fz-xl-18 fw-400 lh-normal m-0">
+          {{- s.title | default: collection.title -}}
+        </h2>
+        {%- if s.cta_label != blank -%}
+          <a
+            class="btn pb-row-featured-products__cta ml-auto --link"
+            href="{{ s.cta_url | default: collection.url }}"
+            title=""
+            aria-label="{{ s.cta_label | escape }}">
+            <span class="btn__label" aria-hidden="true">{{ s.cta_label }}</span>
+          </a>
+        {%- endif -%}
+      </header>
+
+      <ul class="pb-row-featured-products__list d-grid grid-column-2 grid-column-md-4 col-gap-10 row-gap-20 list-none m-0 p-0">
+        {%- for product in collection.products limit: s.products_limit -%}
+          <li>
+            {%- capture card_id -%}{{ row_id }}__product-{{ product.id }}{%- endcapture -%}
+            {%- render 'product-preview',
+              product: product,
+              unique_id: card_id,
+              class: 'pb-row-featured-products__product',
+              rollover: s.rollover,
+              show_colors: s.show_colors -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured products",
+  "tag": "section",
+  "class": "section--pb-row-featured-products",
+  "settings": [
+    { "type": "collection", "id": "collection", "label": "Collection" },
+    { "type": "text", "id": "title", "label": "Title", "info": "Falls back to the collection title." },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "Shop" },
+    { "type": "url", "id": "cta_url", "label": "CTA link", "info": "Falls back to the collection URL." },
+    { "type": "range", "id": "products_limit", "label": "Products", "min": 2, "max": 12, "step": 1, "default": 4 },
+    {
+      "type": "checkbox",
+      "id": "rollover",
+      "label": "Reveal title and price on hover",
+      "info": "Adds the --variation-rollover-specs treatment.",
+      "default": false
+    },
+    { "type": "checkbox", "id": "show_colors", "label": "Show colour swatches", "default": false },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "text_color", "label": "Text colour" },
+    { "type": "color", "id": "bg_color", "label": "Background colour" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "number", "id": "zindex", "label": "z-index", "default": 0 },
+    { "type": "number", "id": "pt", "label": "Padding top (mobile)", "default": 0 },
+    { "type": "number", "id": "pb", "label": "Padding bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "pt_md", "label": "Padding top (tablet)", "default": 0 },
+    { "type": "number", "id": "pb_md", "label": "Padding bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "pt_xl", "label": "Padding top (desktop)", "default": 0 },
+    { "type": "number", "id": "pb_xl", "label": "Padding bottom (desktop)", "default": 0 },
+    { "type": "number", "id": "mt", "label": "Margin top (mobile)", "default": 30 },
+    { "type": "number", "id": "mb", "label": "Margin bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "mt_md", "label": "Margin top (tablet)", "default": 70 },
+    { "type": "number", "id": "mb_md", "label": "Margin bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "mt_xl", "label": "Margin top (desktop)", "default": 70 },
+    { "type": "number", "id": "mb_xl", "label": "Margin bottom (desktop)", "default": 0 }
+  ],
+  "presets": [{ "name": "Featured products" }]
+}
+{% endschema %}

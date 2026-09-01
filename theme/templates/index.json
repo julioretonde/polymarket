@@ -1,0 +1,169 @@
+{
+  "sections": {
+    "pb_row_hero": {
+      "type": "pb-row-hero",
+      "blocks": {
+        "shop_now": {
+          "type": "button",
+          "settings": {
+            "label": "Shop now",
+            "url": "/collections/shopall"
+          }
+        }
+      },
+      "block_order": ["shop_now"],
+      "settings": {
+        "title": "SPRING-SUMMER",
+        "subtitle": "26",
+        "text": "<p><br>A collection shaped at the intersection of Montreal’s grit and technical innovation. As we move into the 2026 summer season, our latest range reimagines warm-weather running through lightweight construction, breathable performance, and considered design built for heat and movement.</p>",
+        "text_color": "#ffffff",
+        "bg_color": "#000000",
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 0, "mb": 0, "mt_md": 0, "mb_md": 0, "mt_xl": 0, "mb_xl": 0
+      }
+    },
+    "pb_row_page_header": {
+      "type": "pb-row-page-header",
+      "settings": {
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 0, "mb": 0, "mt_md": 0, "mb_md": 0, "mt_xl": 0, "mb_xl": 0
+      }
+    },
+    "pb_row_promo_products_headwear": {
+      "type": "pb-row-promo-products",
+      "blocks": {
+        "product_1": { "type": "product", "settings": { "product": "somerville-4-panel-hat" } },
+        "product_2": { "type": "product", "settings": { "product": "aberdeen-6-panel-hat" } }
+      },
+      "block_order": ["product_1", "product_2"],
+      "settings": {
+        "layout": "promo_products",
+        "promo_title": "HEADWEAR",
+        "promo_text": "<p>SS26 Collection<br>-<br>For Spring–Summer 2026, Balmoral presents a range of headwear designed for warm weather movement and everyday wear, lightweight, breathable, and precise in construction. Each piece is shaped by performance needs and daily use, with a considered approach to form and function.</p>",
+        "promo_text_color": "#ffffff",
+        "cta_label": "shop headwear",
+        "cta_url": "/collections/headwear",
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 10, "mb": 0, "mt_md": 10, "mb_md": 0, "mt_xl": 10, "mb_xl": 0
+      }
+    },
+    "pb_row_promo_products_oakwood": {
+      "type": "pb-row-promo-products",
+      "blocks": {
+        "product_1": { "type": "product", "settings": { "product": "oakwood-tank-top" } },
+        "product_2": { "type": "product", "settings": { "product": "oakwood-longsleeve" } }
+      },
+      "block_order": ["product_1", "product_2"],
+      "settings": {
+        "layout": "products_promo",
+        "promo_title": "THE OAKWOOD COLLECTION",
+        "promo_text": "<p>The Oakwood collection brings together a selection of styles designed for race day performance. Lightweight, focused, and built to move, each piece is refined for speed and clarity when it matters most.</p>",
+        "promo_text_color": "#ffffff",
+        "cta_label": "Discover",
+        "cta_url": "/collections/oakwood",
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 10, "mb": 0, "mt_md": 10, "mb_md": 0, "mt_xl": 10, "mb_xl": 0
+      }
+    },
+    "pb_row_featured_products_cotton": {
+      "type": "pb-row-featured-products",
+      "settings": {
+        "collection": "cotton-t-shirts",
+        "title": "Cotton T-shirts",
+        "cta_label": "Shop",
+        "cta_url": "/collections/cotton-t-shirts",
+        "products_limit": 4,
+        "rollover": false,
+        "show_colors": false,
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 30, "mb": 0, "mt_md": 70, "mb_md": 0, "mt_xl": 70, "mb_xl": 0
+      }
+    },
+    "pb_row_featured_products_performance": {
+      "type": "pb-row-featured-products",
+      "settings": {
+        "collection": "performance-t-shirts",
+        "title": "Performance T-Shirts",
+        "cta_label": "Shop",
+        "cta_url": "/collections/performance-t-shirts",
+        "products_limit": 4,
+        "rollover": true,
+        "show_colors": true,
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 30, "mb": 0, "mt_md": 30, "mb_md": 0, "mt_xl": 10, "mb_xl": 0
+      }
+    },
+    "pb_row_text_media": {
+      "type": "pb-row-text-media",
+      "settings": {
+        "title": "About Us",
+        "text": "<p>Balmoral was founded in Canada to create timeless garments shaped by the country’s distinct climate and way of life.</p>",
+        "cta_label": "DISCOVER",
+        "cta_url": "/pages/about-us",
+        "text_color": "#ffffff",
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 30, "mb": 0, "mt_md": 30, "mb_md": 0, "mt_xl": 30, "mb_xl": 0
+      }
+    },
+    "pb_row_text_columns": {
+      "type": "pb-row-text-columns",
+      "blocks": {
+        "shipping": {
+          "type": "text_column",
+          "settings": {
+            "title": "Shipping & returns",
+            "text": "<p>Review our shipping and returns information</p>",
+            "url": "/pages/shipping-returns"
+          }
+        },
+        "contact": {
+          "type": "text_column",
+          "settings": {
+            "title": "Contact",
+            "text": "<p>Email our team for all inquiries</p>",
+            "url": "/pages/contact-us"
+          }
+        },
+        "lookbook": {
+          "type": "text_column",
+          "settings": {
+            "title": "Lookbook",
+            "text": "<p>Explore the Spring–Summer 26 Lookbook</p>",
+            "url": "/pages/lookbook"
+          }
+        },
+        "press": {
+          "type": "text_column",
+          "settings": {
+            "title": "Press",
+            "text": "<p>Discover our selected features and mentions</p>",
+            "url": "/pages/press"
+          }
+        }
+      },
+      "block_order": ["shipping", "contact", "lookbook", "press"],
+      "settings": {
+        "zindex": 0,
+        "pt": 0, "pb": 0, "pt_md": 0, "pb_md": 0, "pt_xl": 0, "pb_xl": 0,
+        "mt": 30, "mb": 20, "mt_md": 50, "mb_md": 40, "mt_xl": 40, "mb_xl": 70
+      }
+    }
+  },
+  "order": [
+    "pb_row_hero",
+    "pb_row_page_header",
+    "pb_row_promo_products_headwear",
+    "pb_row_promo_products_oakwood",
+    "pb_row_featured_products_cotton",
+    "pb_row_featured_products_performance",
+    "pb_row_text_media",
+    "pb_row_text_columns"
+  ]
+}

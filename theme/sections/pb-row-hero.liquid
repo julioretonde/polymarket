@@ -1,0 +1,129 @@
+{%- comment -%}
+  Hero row.
+
+  Full-bleed media behind a two-column grid: title + subtitle + buttons pinned
+  bottom-left, intro copy bottom-right. Text and background colours are set as
+  custom properties on the wrapper rather than as classes so the same section
+  can be re-skinned per instance from the editor.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+
+  assign row_id = 'pb-row-hero-' | append: section.id
+  assign widths = '576,768,1024,1200,1800,2400' | split: ','
+-%}
+
+{%- capture wrapper_class -%}
+  {%- render 'pb-row-wrapper-class',
+    pt: s.pt, pb: s.pb, pt_md: s.pt_md, pb_md: s.pb_md, pt_xl: s.pt_xl, pb_xl: s.pb_xl,
+    mt: s.mt, mb: s.mb, mt_md: s.mt_md, mb_md: s.mb_md, mt_xl: s.mt_xl, mb_xl: s.mb_xl,
+    text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+{%- capture wrapper_style -%}
+  {%- render 'pb-row-wrapper-style', zindex: s.zindex, text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+
+<div class="shopify-block block-wrapper" id="shopify-block-{{ section.id }}__wrapper">
+  <div class="{{ wrapper_class }}" style="{{ wrapper_style }}">
+    <div class="pb-row pb-row-hero container-fluid position-relative d-grid row-gap-20 pb-30 pb-md-12 pb-xl-10" id="{{ row_id }}">
+      <div class="pb-row-hero__media position-absolute t-0 l-0 w-100 h-100 pointer-events-none2" aria-hidden="true">
+        <picture class="pb-row-hero__picture position-absolute t-0 l-0 w-100 h-100">
+          {%- if s.image != blank -%}
+            <img
+              class="pb-row-hero__img image-as-background"
+              src="{{ s.image | image_url: width: 2400 }}"
+              srcset="{% for w in widths %}{%- assign wn = w | plus: 0 -%}{{ s.image | image_url: width: wn }} {{ wn }}w{% unless forloop.last %},{% endunless %}{% endfor %}"
+              sizes="100vw"
+              alt=""
+              width="{{ s.image.width }}"
+              height="{{ s.image.height }}"
+              data-lazyload-target="#{{ row_id }}"
+              fetchpriority="high">
+          {%- endif -%}
+        </picture>
+      </div>
+
+      <header class="pb-row-hero__header position-relative col-start-1 col-span-4 col-span-xl-9 row-start-md-1 align-self-end d-flex align-items-start">
+        {%- if s.title != blank -%}
+          <h1 class="pb-row-hero__title fz-20 fz-md-32 fz-xl-40 fw-400 lh-normal m-0">{{ s.title }}</h1>
+        {%- endif -%}
+        {%- if s.subtitle != blank -%}
+          <p class="pb-row-hero__subtitle position-relative fz-11 fz-md-18 fz-xl-14 fw-400 lh-normal m-0">{{ s.subtitle }}</p>
+        {%- endif -%}
+
+        {%- if section.blocks.size > 0 -%}
+          <div class="shopify-block block-buttons parent-shopify-block" id="shopify-block-{{ section.id }}__buttons">
+            <nav class="links-nav d-flex pb-row-hero__buttons ml-xl-5 --layout-horizontal --layout-mobile-horizontal --layout-tablet-horizontal">
+              {%- for block in section.blocks -%}
+                <div class="shopify-block block-button" id="shopify-block-{{ block.id }}__button" style="--index:{{ forloop.index0 }}" {{ block.shopify_attributes }}>
+                  <a
+                    class="btn links-nav__link --link"
+                    href="{{ block.settings.url }}"
+                    title=""
+                    aria-label="{{ block.settings.label | escape }}">
+                    <span class="btn__label" aria-hidden="true">{{ block.settings.label }}</span>
+                  </a>
+                </div>
+              {%- endfor -%}
+            </nav>
+          </div>
+        {%- endif -%}
+      </header>
+
+      <div class="pb-row-hero__content position-relative col-start-1 col-start-md-5 col-start-xl-10 col-span-4 col-span-xl-3 row-start-md-1 align-self-end d-flex flex-column grid-gap-24 pb-md-5 pb-xl-12">
+        {%- if s.text != blank -%}
+          <div class="pb-row-hero__text fz-14 fz-xl-15 fw-400 lh-17 lh-md-normal wysiwyg">{{ s.text }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "class": "section--pb-row-hero",
+  "max_blocks": 4,
+  "settings": [
+    { "type": "image_picker", "id": "image", "label": "Background image" },
+    { "type": "text", "id": "title", "label": "Title", "default": "SPRING-SUMMER" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "26" },
+    {
+      "type": "richtext",
+      "id": "text",
+      "label": "Text",
+      "default": "<p>A collection shaped at the intersection of Montreal’s grit and technical innovation. As we move into the 2026 summer season, our latest range reimagines warm-weather running through lightweight construction, breathable performance, and considered design built for heat and movement.</p>"
+    },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "text_color", "label": "Text colour", "default": "#ffffff" },
+    { "type": "color", "id": "bg_color", "label": "Background colour", "default": "#000000" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "number", "id": "zindex", "label": "z-index", "default": 0 },
+    { "type": "number", "id": "pt", "label": "Padding top (mobile)", "default": 0 },
+    { "type": "number", "id": "pb", "label": "Padding bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "pt_md", "label": "Padding top (tablet)", "default": 0 },
+    { "type": "number", "id": "pb_md", "label": "Padding bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "pt_xl", "label": "Padding top (desktop)", "default": 0 },
+    { "type": "number", "id": "pb_xl", "label": "Padding bottom (desktop)", "default": 0 },
+    { "type": "number", "id": "mt", "label": "Margin top (mobile)", "default": 0 },
+    { "type": "number", "id": "mb", "label": "Margin bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "mt_md", "label": "Margin top (tablet)", "default": 0 },
+    { "type": "number", "id": "mb_md", "label": "Margin bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "mt_xl", "label": "Margin top (desktop)", "default": 0 },
+    { "type": "number", "id": "mb_xl", "label": "Margin bottom (desktop)", "default": 0 }
+  ],
+  "blocks": [
+    {
+      "type": "button",
+      "name": "Button",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Shop now" },
+        { "type": "url", "id": "url", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [{ "name": "Hero", "blocks": [{ "type": "button" }] }]
+}
+{% endschema %}

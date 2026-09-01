@@ -1,0 +1,17 @@
+{%- comment -%}
+  Companion to pb-row-wrapper-class: echoes the inline custom properties the
+  row wrapper reads (`--zindex`, `--text-color`, `--bg-color`).
+
+  Capture the output:
+    {%- capture wrapper_style %}{% render 'pb-row-wrapper-style', zindex: 0, ... %}{% endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign out = '--zindex:' | append: zindex
+  if text_color != blank
+    assign out = out | append: ';--text-color:' | append: text_color
+  endif
+  if bg_color != blank
+    assign out = out | append: ';--bg-color:' | append: bg_color
+  endif
+  echo out
+-%}

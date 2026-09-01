@@ -1,0 +1,67 @@
+{%- comment -%}
+  Mobile / tablet navigation panel (hidden from 1200px up, where the header
+  menus take over). Collapsed to `display: none` via [aria-hidden="true"], so
+  it costs nothing until the burger toggles it.
+
+  The captured page ships this container empty and fills it on demand; it is
+  populated here from the same link lists the header uses so the panel works
+  without the storefront's section-fetching script.
+{%- endcomment -%}
+
+<div
+  class="site-nav d-md-grid d-xl-none position-fixed z-2000 t-0 l-0 vw-100 overflow-clip"
+  id="site-nav"
+  data-ui="site-nav"
+  aria-hidden="true"
+  inert>
+  <nav class="site-nav__wrap container-fluid d-flex flex-column justify-content-between h-100 pt-30 pb-20">
+    <ul class="site-nav__menu d-flex flex-column row-gap-20 menu list-none m-0 p-0 fz-20 fz-md-32 fw-400 lh-normal">
+      {%- for link in linklists[section.settings.menu].links -%}
+        <li class="menu-item position-relative pt-10">
+          <a class="td-none" href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- endfor -%}
+      {%- for link in linklists[section.settings.secondary_menu].links -%}
+        <li class="menu-item position-relative pt-10">
+          <a class="td-none" href="{{ link.url }}">{{ link.title }}</a>
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    <ul class="site-nav__utils d-flex flex-column row-gap-12 list-none m-0 p-0 fz-13 fz-md-14">
+      <li>
+        <a class="td-none" href="{{ routes.account_url }}">
+          {%- if customer -%}
+            {{ 'customer.account.title' | t }}
+          {%- else -%}
+            {{ 'customer.log_in' | t }}
+          {%- endif -%}
+        </a>
+      </li>
+      <li>
+        <a class="td-none" href="{{ routes.search_url }}">{{ 'general.search.title' | t }}</a>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+{% schema %}
+{
+  "name": "Mobile navigation",
+  "class": "section-nav",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_menu",
+      "label": "Secondary menu",
+      "default": "secondary-menu"
+    }
+  ]
+}
+{% endschema %}

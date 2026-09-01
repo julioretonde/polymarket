@@ -1,0 +1,100 @@
+{%- comment -%}
+  Cart drawer. Slides in from the right when the header cart button is
+  expanded; `--is-empty` drives the empty state, `data-cart-count` feeds the
+  little counter bubble on the button.
+{%- endcomment -%}
+
+<div
+  class="site-cart position-fixed z-9000 t-0 l-0 w-100 vh-100 overflow-hidden{% if cart.item_count == 0 %} --is-empty{% endif %}"
+  id="site-cart"
+  data-site-cart
+  data-ui="site-cart"
+  aria-hidden="true">
+  <div class="site-cart__backdrop position-absolute t-0 r-0 h-100 w-100" aria-controls="site-cart" aria-expanded="false"></div>
+
+  <div class="site-cart__container position-absolute t-0 r-0 h-100 w-100 bg-color-white d-flex flex-column">
+    <header class="site-cart__header pl-10 pr-10 pt-20 pb-20 fz-14 d-grid align-items-center justify-content-between">
+      <span
+        class="site-header__cartBtn position-relative d-xl-flex fw-inherit p-0 m-0"
+        aria-label="{{ 'general.cart.title' | t }}"
+        data-cart-count="{{ cart.item_count }}">
+        <span aria-hidden="true">{{ 'general.cart.title' | t }}</span>
+        {%- render 'icon-cart' -%}
+      </span>
+
+      <button class="site-cart__close justify-self-end col-start-3" aria-controls="site-cart">
+        {%- render 'icon-close' -%}
+      </button>
+    </header>
+
+    <div class="site-cart__content d-flex flex-column flex-grow-1 overflow-hidden" data-cart-content>
+      <div class="site-cart__items p-10 flex-grow-1 overflow-hidden d-flex flex-column row-gap-10">
+        {%- if cart.item_count == 0 -%}
+          <div class="site-cart__empty h-100 d-flex flex-column justify-content-center fz-13 fz-md-14 fz-xl-15 mb-20">
+            <p class="site-cart__emptyTitle tt-uppercase m-0">{{ 'cart.empty.title' | t }}<br>&mdash;</p>
+            <p class="site-cart__emptyText m-0">{{ 'cart.empty.text' | t }}</p>
+            <a
+              class="btn mt-15 mt-xl-30 align-self-start --link"
+              href="{{ routes.all_products_collection_url }}"
+              title=""
+              aria-label="{{ 'cart.empty.cta' | t }}">
+              <span class="btn__label" aria-hidden="true">{{ 'cart.empty.cta' | t }}</span>
+            </a>
+          </div>
+        {%- else -%}
+          <form action="{{ routes.cart_url }}" method="post" novalidate class="d-flex flex-column row-gap-10">
+            {%- for item in cart.items -%}
+              <article class="site-cart__item d-grid col-gap-10 fz-13 fz-xl-14">
+                <a class="site-cart__itemImgBox position-relative bg-gray-400 td-none" href="{{ item.url }}">
+                  {%- if item.image -%}
+                    <img
+                      class="site-cart__itemImg image-as-background"
+                      src="{{ item.image | image_url: width: 400 }}"
+                      alt="{{ item.image.alt | escape }}"
+                      width="{{ item.image.width }}"
+                      height="{{ item.image.height }}"
+                      loading="lazy">
+                  {%- endif -%}
+                </a>
+                <div class="site-cart__itemContent d-flex flex-column">
+                  <a class="site-cart__itemTitle td-none" href="{{ item.url }}">{{ item.product.title }}</a>
+                  {%- unless item.variant.title contains 'Default' -%}
+                    <p class="site-cart__itemVariant m-0">{{ item.variant.title }}</p>
+                  {%- endunless -%}
+                  <p class="site-cart__itemPrice m-0">{{ item.final_line_price | money_with_currency }}</p>
+                  <p class="site-cart__itemQty m-0">{{ 'cart.quantity' | t }}: {{ item.quantity }}</p>
+                </div>
+              </article>
+            {%- endfor -%}
+
+            <footer class="site-cart__footer d-flex flex-column row-gap-10 fz-13 fz-xl-14">
+              <p class="site-cart__total d-flex justify-content-between m-0">
+                <span>{{ 'cart.subtotal' | t }}</span>
+                <span>{{ cart.total_price | money_with_currency }}</span>
+              </p>
+              <button class="btn --link align-self-start" type="submit" name="checkout">
+                <span class="btn__label" aria-hidden="true">{{ 'cart.checkout' | t }}</span>
+              </button>
+            </footer>
+          </form>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <div
+      class="site-cart__recommendations d-flex flex-column row-gap-10 pb-20 flex-shrink-0"
+      data-default-product-id=""
+      aria-hidden="true">
+      <template class="site-cart__recommendationTemplate">
+        <article class="site-cart__recommendation swiper-slide">
+          <a class="d-flex flex-column row-gap-5 row-gap-xl-10 td-none" data-href="%url%">
+            <span class="site-cart__recommendationImgBox position-relative bg-gray-400">
+              <img class="site-cart__recommendationImg image-as-background" data-src="%thumbnail%">
+            </span>
+            <span class="site-cart__recommendationTitle fz-13 fz-xl-14">%title%</span>
+          </a>
+        </article>
+      </template>
+    </div>
+  </div>
+</div>

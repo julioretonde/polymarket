@@ -1,0 +1,122 @@
+{%- comment -%}
+  Text over media row.
+
+  Header (title / copy / CTA) sits on `z-2` in row 1 of a subgrid; an image and
+  a looping video fill the same row underneath it on `z-1`, so the copy reads
+  over both halves on desktop and stacks above them on mobile.
+{%- endcomment -%}
+
+{%- liquid
+  assign s = section.settings
+  assign row_id = 'pb-row-text-media-' | append: section.id
+  assign widths = '576,768,1024,1200,1800,2400' | split: ','
+
+  assign video_source = nil
+  for source in s.video.sources
+    if source.format == 'mp4'
+      assign video_source = source
+      break
+    endif
+  endfor
+-%}
+
+{%- capture wrapper_class -%}
+  {%- render 'pb-row-wrapper-class',
+    pt: s.pt, pb: s.pb, pt_md: s.pt_md, pb_md: s.pb_md, pt_xl: s.pt_xl, pb_xl: s.pb_xl,
+    mt: s.mt, mb: s.mb, mt_md: s.mt_md, mb_md: s.mb_md, mt_xl: s.mt_xl, mb_xl: s.mb_xl,
+    text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+{%- capture wrapper_style -%}
+  {%- render 'pb-row-wrapper-style', zindex: s.zindex, text_color: s.text_color, bg_color: s.bg_color -%}
+{%- endcapture -%}
+
+<div class="shopify-block block-wrapper" id="shopify-block-{{ section.id }}__wrapper">
+  <div class="{{ wrapper_class }}" style="{{ wrapper_style }}">
+    <div class="pb-row pb-row-text-media container-fluid d-grid grid-column-md-8 grid-column-xl-12" id="{{ row_id }}">
+      <header class="pb-row-text-media__header col-start-1 col-span-md-8 col-span-xl-12 row-start-1 align-self-start position-relative z-2 d-grid align-items-start row-gap-15 row-gap-md-10 pt-30 pt-md-20 pt-xl-30 pb-30 pb-md-20 pb-xl-30">
+        {%- if s.title != blank -%}
+          <h2 class="pb-row-text-media__title col-start-md-1 col-span-md-4 row-start-md-1 fz-16 fz-xl-18 fw-400 lh-normal m-0">{{ s.title }}</h2>
+        {%- endif -%}
+        {%- if s.text != blank -%}
+          <div class="pb-row-text-media__text col-start-md-1 col-start-xl-4 col-span-md-4 col-span-xl-3 row-start-xl-1 fz-14 fz-xl-15 fw-400 lh-normal mr-10 mr-md-20 mr-xl-30 wysiwyg">{{ s.text }}</div>
+        {%- endif -%}
+        {%- if s.cta_label != blank -%}
+          <a
+            class="btn pb-row-text-media__cta col-start-md-5 col-start-xl-7 col-span-md-4 col-span-xl-6 row-start-md-1 align-self-md-start justify-self-md-end mt-5 mt-md-0 --link"
+            href="{{ s.cta_url }}"
+            title=""
+            aria-label="{{ s.cta_label | escape }}">
+            <span class="btn__label" aria-hidden="true">{{ s.cta_label }}</span>
+          </a>
+        {%- endif -%}
+      </header>
+
+      <figure class="pb-row-text-media__leftMedia col-start-1 col-span-md-4 col-span-xl-6 row-start-1 w-100 position-relative z-1 overflow-clip pointer-events-none">
+        {%- if s.image != blank -%}
+          <img
+            class="pb-row-text-media__leftImg image-as-background"
+            src="{{ s.image | image_url: width: 2400 }}"
+            srcset="{% for w in widths %}{%- assign wn = w | plus: 0 -%}{{ s.image | image_url: width: wn }} {{ wn }}w{% unless forloop.last %},{% endunless %}{% endfor %}"
+            sizes="(min-width: 768px) 50vw, 100vw"
+            alt=""
+            width="{{ s.image.width }}"
+            height="{{ s.image.height }}"
+            data-lazyload-target="#{{ row_id }} .pb-row-text-media__leftMedia"
+            loading="lazy">
+        {%- endif -%}
+      </figure>
+
+      <figure class="pb-row-text-media__rightMedia col-start-1 col-start-md-5 col-start-xl-7 col-span-md-4 col-span-xl-6 row-start-2 row-start-md-1 w-100 position-relative z-1 overflow-clip pointer-events-none">
+        {%- if video_source -%}
+          <video
+            class="w-100 pb-row-text-media__rightVideo video-as-background"
+            data-module="video"
+            data-src="{{ video_source.url }}"
+            {% if s.video.preview_image %}poster="{{ s.video.preview_image | image_url: width: 1920 }}"{% endif %}
+            width="1920"
+            height="1080"
+            data-scroll
+            data-scroll-call="video"
+            data-scroll-repeat="true"
+            loop
+            muted
+            playsinline></video>
+        {%- endif -%}
+      </figure>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Text over media",
+  "tag": "section",
+  "class": "section--pb-row-text-media",
+  "settings": [
+    { "type": "text", "id": "title", "label": "Title", "default": "About Us" },
+    { "type": "richtext", "id": "text", "label": "Text" },
+    { "type": "text", "id": "cta_label", "label": "CTA label", "default": "DISCOVER" },
+    { "type": "url", "id": "cta_url", "label": "CTA link" },
+    { "type": "image_picker", "id": "image", "label": "Left image" },
+    { "type": "video", "id": "video", "label": "Right video" },
+    { "type": "header", "content": "Colours" },
+    { "type": "color", "id": "text_color", "label": "Text colour", "default": "#ffffff" },
+    { "type": "color", "id": "bg_color", "label": "Background colour" },
+    { "type": "header", "content": "Spacing" },
+    { "type": "number", "id": "zindex", "label": "z-index", "default": 0 },
+    { "type": "number", "id": "pt", "label": "Padding top (mobile)", "default": 0 },
+    { "type": "number", "id": "pb", "label": "Padding bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "pt_md", "label": "Padding top (tablet)", "default": 0 },
+    { "type": "number", "id": "pb_md", "label": "Padding bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "pt_xl", "label": "Padding top (desktop)", "default": 0 },
+    { "type": "number", "id": "pb_xl", "label": "Padding bottom (desktop)", "default": 0 },
+    { "type": "number", "id": "mt", "label": "Margin top (mobile)", "default": 30 },
+    { "type": "number", "id": "mb", "label": "Margin bottom (mobile)", "default": 0 },
+    { "type": "number", "id": "mt_md", "label": "Margin top (tablet)", "default": 30 },
+    { "type": "number", "id": "mb_md", "label": "Margin bottom (tablet)", "default": 0 },
+    { "type": "number", "id": "mt_xl", "label": "Margin top (desktop)", "default": 30 },
+    { "type": "number", "id": "mb_xl", "label": "Margin bottom (desktop)", "default": 0 }
+  ],
+  "presets": [{ "name": "Text over media" }]
+}
+{% endschema %}

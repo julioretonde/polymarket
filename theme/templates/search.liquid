@@ -1,0 +1,21 @@
+{%- comment -%}
+  Minimal stand-in for the results of the header search panel.
+{%- endcomment -%}
+<div class="container-fluid pt-35 pb-20 d-flex flex-column grid-gap-5">
+  <h1 class="fz-16 fz-xl-18 fw-400 lh-normal m-0">
+    {{ search.results_count }} results for &ldquo;{{ search.terms | escape }}&rdquo;
+  </h1>
+
+  <ul class="pb-row-featured-products__list d-grid grid-column-2 grid-column-md-4 col-gap-10 row-gap-20 list-none m-0 p-0">
+    {%- for item in search.results -%}
+      {%- if item.object_type == 'product' -%}
+        <li>
+          {%- capture card_id -%}search__product-{{ item.id }}{%- endcapture -%}
+          {%- render 'product-preview', product: item, unique_id: card_id, class: 'pb-row-featured-products__product' -%}
+        </li>
+      {%- else -%}
+        <li><a class="td-none fz-13 fz-xl-14" href="{{ item.url }}">{{ item.title }}</a></li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+</div>

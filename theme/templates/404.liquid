@@ -1,0 +1,10 @@
+{%- comment -%}
+  Minimal stand-in. Not part of the captured home page - included so the theme
+  has somewhere to land for unknown URLs.
+{%- endcomment -%}
+<div class="container-fluid pt-35 pb-20 d-flex flex-column row-gap-15">
+  <h1 class="fz-20 fz-md-32 fz-xl-40 fw-400 lh-normal m-0">{{ 'general.404.title' | t | default: 'Page not found' }}</h1>
+  <a class="btn --link align-self-start" href="{{ routes.root_url }}">
+    <span class="btn__label" aria-hidden="true">Back to home</span>
+  </a>
+</div>

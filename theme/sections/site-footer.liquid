@@ -1,0 +1,143 @@
+{%- comment -%}
+  Site footer.
+
+  Four regions on a 12-column grid: three link menus, the newsletter field, the
+  language/country switchers, and the copyright + credits line. On mobile they
+  stack in source order; `order-md-3` / `order-xl-1` re-sequence them at the
+  wider breakpoints.
+{%- endcomment -%}
+
+<footer class="site-footer container-fluid d-grid grid-column-md-4 grid-column-xl-12 col-gap-10 row-gap-30 row-gap-xl-50 row-gap-md-30 pt-35 pt-md-30 pb-20 pb-xl-12 fz-13 fz-xl-14 lh-15">
+  <nav class="site-footer__nav d-grid grid-column-2 grid-column-xl-3 col-gap-10 row-gap-35 row-gap-md-30 col-span-md-2 col-span-xl-6 col-start-xl-4">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'menu' -%}
+        <ul class="site-footer__menu d-flex flex-column row-gap-12 menu list-none m-0 p-0" {{ block.shopify_attributes }}>
+          {%- for link in linklists[block.settings.menu].links -%}
+            <li class="menu-item">
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    {%- endfor -%}
+  </nav>
+
+  <div class="site-footer__newsletter d-flex flex-column row-gap-15 row-gap-md-24 row-gap-xl-30 col-span-md-2 col-span-xl-3 col-start-xl-10">
+    <div class="d-flex flex-column row-gap-15 row-gap-md-12 row-gap-xl-15">
+      <h4 class="site-footer__newsletterTitle fz-11 lh-base lh-md-15 fw-500 tt-uppercase m-0">
+        {{- section.settings.newsletter_title -}}
+      </h4>
+    </div>
+
+    {%- form 'customer', id: 'contact_form', class: 'contact-form' -%}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <input
+        class="site-footer__newsletterInput fz-13 fz-xl-14 lh-15 color-current"
+        type="email"
+        name="contact[email]"
+        value="{{ form.email }}"
+        placeholder="{{ section.settings.newsletter_placeholder }}"
+        aria-label="{{ section.settings.newsletter_placeholder }}"
+        aria-hidden="false"
+        autocorrect="off"
+        autocapitalize="off"
+        required>
+      {%- if form.posted_successfully? -%}
+        <p class="site-footer__newsletterSuccess m-0">{{ 'newsletter.success' | t }}</p>
+      {%- endif -%}
+    {%- endform -%}
+  </div>
+
+  <div class="site-footer__config d-grid grid-column-2 grid-column-xl-3 col-gap-10 order-md-3 col-span-md-2 col-span-xl-3 col-start-xl-10">
+    {%- if localization.available_languages.size > 1 -%}
+      <div class="site-footer__languagesWrap d-flex flex-column row-gap-5 row-gap-xl-10">
+        <h4 class="site-footer__configTitle fz-11 lh-base lh-md-15 fw-500 tt-uppercase m-0">
+          {{- 'localization.language_label' | t -}}
+        </h4>
+        <localization-form class="language-switcher localization-switcher site-footer__languages">
+          {%- form 'localization', id: 'localization_form', class: 'shopify-localization-form' -%}
+            <select class="localization-switcher__select w-100" name="language_code" style="--select-width:56px">
+              {%- for language in localization.available_languages -%}
+                <option value="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} selected{% endif %}>
+                  {{- language.endonym_name | capitalize -}}
+                </option>
+              {%- endfor -%}
+            </select>
+          {%- endform -%}
+        </localization-form>
+      </div>
+    {%- endif -%}
+
+    {%- if localization.available_countries.size > 1 -%}
+      <div class="site-footer__countriesWrap col-span-xl-2 d-flex flex-column row-gap-5 row-gap-xl-10">
+        <h4 class="site-footer__configTitle fz-11 lh-base lh-md-15 fw-500 tt-uppercase m-0">
+          {{- 'localization.country_label' | t -}}
+        </h4>
+        <localization-form class="country-switcher localization-switcher site-footer__countries">
+          {%- form 'localization', id: 'localization_form', class: 'shopify-localization-form' -%}
+            <select class="localization-switcher__select w-100" name="country_code" style="--select-width:91px">
+              {%- for country in localization.available_countries -%}
+                <option value="{{ country.iso_code }}"{% if country.iso_code == localization.country.iso_code %} selected{% endif %}>
+                  {{- country.name }} ({{ country.currency.iso_code }})
+                </option>
+              {%- endfor -%}
+            </select>
+          {%- endform -%}
+        </localization-form>
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="site-footer__bottom fz-11 fz-xl-12 position-relative d-grid grid-column-2 grid-column-xl-5 col-gap-10 col-span-md-2 col-span-xl-5 order-xl-1 align-self-md-end">
+    <p class="site-footer__copyright m-0 col-span-xl-3">
+      {{ 'general.footer.copyright' | t }} &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}
+    </p>
+    <p class="site-footer__credits m-0 p-0 tt-uppercase ta-right ta-md-left justify-self-end justify-self-md-start col-start-2 col-start-xl-4 col-span-xl-2">
+      <a
+        class="mill3"
+        href="{{ section.settings.credits_url }}"
+        target="_blank"
+        rel="noopener"
+        title="credits - {{ section.settings.credits_label }}"
+        aria-label="credits - {{ section.settings.credits_label }}"
+        data-windmill-prevent>
+        <span class="mill3__wrap d-block position-relative overflow-hidden" aria-hidden="true">
+          <span class="mill3__label d-block">credits</span>
+          <span class="mill3__credits d-block">{{ section.settings.credits_label }}</span>
+        </span>
+      </a>
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "max_blocks": 3,
+  "settings": [
+    { "type": "text", "id": "newsletter_title", "label": "Newsletter title", "default": "Subscribe to our newsletter" },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Newsletter placeholder",
+      "default": "Enter your email adress here"
+    },
+    { "type": "text", "id": "credits_label", "label": "Credits label", "default": "MILL3" },
+    { "type": "url", "id": "credits_url", "label": "Credits link", "default": "https://mill3.studio/" }
+  ],
+  "blocks": [
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [{ "type": "link_list", "id": "menu", "label": "Menu" }]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [{ "type": "menu" }, { "type": "menu" }, { "type": "menu" }]
+    }
+  ]
+}
+{% endschema %}

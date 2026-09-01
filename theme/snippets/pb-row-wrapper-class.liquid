@@ -1,0 +1,32 @@
+{%- comment -%}
+  Echoes the utility class string every `pb-row-wrapper` carries.
+
+  The storefront emits padding and margin utilities for all three breakpoints
+  on every row (`pt-0 pb-0 pt-md-0 pb-md-0 pt-xl-0 pb-xl-0 mt-30 ...`), which
+  is what lets each row be spaced independently from the theme editor.
+
+  Accepts pt/pb/mt/mb and their _md / _xl variants, plus text_color and
+  bg_color so the `--has-text-color` / `--has-bg-color` flags stay in sync with
+  the custom properties set on the element.
+
+  Capture the output:
+    {%- capture wrapper_class %}{% render 'pb-row-wrapper-class', pt: 0, ... %}{% endcapture -%}
+{%- endcomment -%}
+{%- liquid
+  assign out = 'pb-row-wrapper'
+  assign out = out | append: ' pt-' | append: pt | append: ' pb-' | append: pb
+  assign out = out | append: ' pt-md-' | append: pt_md | append: ' pb-md-' | append: pb_md
+  assign out = out | append: ' pt-xl-' | append: pt_xl | append: ' pb-xl-' | append: pb_xl
+  assign out = out | append: ' mt-' | append: mt | append: ' mb-' | append: mb
+  assign out = out | append: ' mt-md-' | append: mt_md | append: ' mb-md-' | append: mb_md
+  assign out = out | append: ' mt-xl-' | append: mt_xl | append: ' mb-xl-' | append: mb_xl
+
+  if text_color != blank
+    assign out = out | append: ' --has-text-color'
+  endif
+  if bg_color != blank
+    assign out = out | append: ' --has-bg-color'
+  endif
+
+  echo out
+-%}
